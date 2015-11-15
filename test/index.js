@@ -1,28 +1,28 @@
 'use strict';
 
-let Wadofgum = require('wadofgum');
-let Events = require('wadofgum-events');
-let Validation = require('..');
-let Joi = require('joi');
+const Wadofgum = require('wadofgum');
+const Events = require('wadofgum-events');
+const Validation = require('..');
+const Joi = require('joi');
 
-let lab = exports.lab = require('lab').script();
-let expect = require('code').expect;
-let it = lab.test;
+const lab = exports.lab = require('lab').script();
+const expect = require('code').expect;
+const it = lab.test;
 
-it('can be extended', function (done) {
+it('can be extended', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
-    let user = new User();
+    const user = new User();
     expect(user.validate).to.exist();
     done();
 });
 
-it('errors when attempting to validate a model with no schema', function (done) {
+it('errors when attempting to validate a model with no schema', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
-    let user = new User();
+    const user = new User();
 
-    user.validate().catch(function (err) {
+    user.validate().catch((err) => {
 
         expect(err).to.exist();
         expect(err.message).to.contain('No schema');
@@ -30,7 +30,7 @@ it('errors when attempting to validate a model with no schema', function (done) 
     });
 });
 
-it('sets default values after validating', function (done) {
+it('sets default values after validating', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -38,8 +38,8 @@ it('sets default values after validating', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User();
-    user.validate().then(function () {
+    const user = new User();
+    user.validate().then(() => {
 
         expect(user).to.exist();
         expect(user.age).to.equal(20);
@@ -48,7 +48,7 @@ it('sets default values after validating', function (done) {
     });
 });
 
-it('converts values after calling validate', function (done) {
+it('converts values after calling validate', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -56,8 +56,8 @@ it('converts values after calling validate', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User({ name: 'test', age: '30' });
-    user.validate().then(function () {
+    const user = new User({ name: 'test', age: '30' });
+    user.validate().then(() => {
 
         expect(user.name).to.equal('test');
         expect(user.age).to.equal(30);
@@ -65,7 +65,7 @@ it('converts values after calling validate', function (done) {
     });
 });
 
-it('reports validation errors', function (done) {
+it('reports validation errors', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -73,8 +73,8 @@ it('reports validation errors', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User({ age: '30' });
-    user.validate().catch(function (err) {
+    const user = new User({ age: '30' });
+    user.validate().catch((err) => {
 
         expect(err).to.exist();
         expect(err.message).to.contain('"name" is required');
@@ -83,7 +83,7 @@ it('reports validation errors', function (done) {
     });
 });
 
-it('converts valid keys to the correct type when validating', function (done) {
+it('converts valid keys to the correct type when validating', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -97,8 +97,8 @@ it('converts valid keys to the correct type when validating', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User({ name: 'test', age: '30', favorites: { number: '20' } });
-    user.validate().then(function () {
+    const user = new User({ name: 'test', age: '30', favorites: { number: '20' } });
+    user.validate().then(() => {
 
         expect(user.age).to.equal(30);
         expect(user.favorites.number).to.equal(20);
@@ -106,7 +106,7 @@ it('converts valid keys to the correct type when validating', function (done) {
     });
 });
 
-it('does not alter keys which contain validation errors', function (done) {
+it('does not alter keys which contain validation errors', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -117,8 +117,8 @@ it('does not alter keys which contain validation errors', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User({ name: 'test', age: 'test', favorites: { number: 'twenty' } });
-    user.validate().catch(function () {
+    const user = new User({ name: 'test', age: 'test', favorites: { number: 'twenty' } });
+    user.validate().catch(() => {
 
         expect(user.favorites.number).to.equal('twenty');
         expect(user.age).to.equal('test');
@@ -126,7 +126,7 @@ it('does not alter keys which contain validation errors', function (done) {
     });
 });
 
-it('reports multiple errors', function (done) {
+it('reports multiple errors', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = {
@@ -134,8 +134,8 @@ it('reports multiple errors', function (done) {
         age: Joi.number().integer().default(20)
     };
 
-    let user = new User({ age: 'test' });
-    user.validate().catch(function (err) {
+    const user = new User({ age: 'test' });
+    user.validate().catch((err) => {
 
         expect(err).to.exist();
         expect(err.message).to.contain('"name" is required');
@@ -145,7 +145,7 @@ it('reports multiple errors', function (done) {
     });
 });
 
-it('removes renamed keys when validating', function (done) {
+it('removes renamed keys when validating', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = Joi.object({
@@ -153,8 +153,8 @@ it('removes renamed keys when validating', function (done) {
         age: Joi.number().integer()
     }).rename('_age', 'age');
 
-    let user = new User({ _age: 30 });
-    user.validate().then(function () {
+    const user = new User({ _age: 30 });
+    user.validate().then(() => {
 
         expect(user.age).to.equal(30);
         expect(user._age).to.not.exist();
@@ -162,7 +162,7 @@ it('removes renamed keys when validating', function (done) {
     }).catch(done);
 });
 
-it('does not remove aliased renamed keys', function (done) {
+it('does not remove aliased renamed keys', (done) => {
 
     class User extends Wadofgum.mixin(Validation) {};
     User.schema = Joi.object({
@@ -170,8 +170,8 @@ it('does not remove aliased renamed keys', function (done) {
         age: Joi.number().integer()
     }).rename('_age', 'age', { alias: true });
 
-    let user = new User({ _age: 30 });
-    user.validate().then(function () {
+    const user = new User({ _age: 30 });
+    user.validate().then(() => {
 
         expect(user.age).to.equal(30);
         expect(user._age).to.equal(30);
@@ -179,9 +179,9 @@ it('does not remove aliased renamed keys', function (done) {
     }).catch(done);
 });
 
-lab.describe('when combined with events', function () {
+lab.describe('when combined with events', () => {
 
-    it('can abort validation by returning an error in preValidate', function (done) {
+    it('can abort validation by returning an error in preValidate', (done) => {
 
         class User extends Wadofgum.mixin(Events, Validation) {};
         User.schema = {
@@ -190,19 +190,19 @@ lab.describe('when combined with events', function () {
         };
 
         let called = false;
-        User.on('preValidate', function (model) {
+        User.on('preValidate', (model) => {
 
             return Promise.reject(new Error('failed'));
         });
 
-        User.on('preValidate', function (model) {
+        User.on('preValidate', (model) => {
 
             called = true;
         });
 
-        let user = new User({ name: 'test' });
+        const user = new User({ name: 'test' });
 
-        user.validate().catch(function (err) {
+        user.validate().catch((err) => {
 
             expect(err).to.exist();
             expect(err.message).to.equal('failed');
@@ -212,7 +212,7 @@ lab.describe('when combined with events', function () {
         });
     });
 
-    it('can pass through an error from postValidate', function (done) {
+    it('can pass through an error from postValidate', (done) => {
 
         class User extends Wadofgum.mixin(Events, Validation) {};
         User.schema = {
@@ -220,13 +220,13 @@ lab.describe('when combined with events', function () {
             age: Joi.number().integer().default(20)
         };
 
-        User.on('postValidate', function (user) {
+        User.on('postValidate', (user) => {
 
             return Promise.reject(new Error('failed'));
         });
 
-        let user = new User({ name: 'test' });
-        user.validate().catch(function (err) {
+        const user = new User({ name: 'test' });
+        user.validate().catch((err) => {
 
             expect(err).to.exist();
             expect(err.message).to.equal('failed');
@@ -234,7 +234,7 @@ lab.describe('when combined with events', function () {
         });
     });
 
-    it('can use preValidate to populate model fields', function (done) {
+    it('can use preValidate to populate model fields', (done) => {
 
         class User extends Wadofgum.mixin(Events, Validation) {};
         User.schema = {
@@ -243,20 +243,20 @@ lab.describe('when combined with events', function () {
             age: Joi.number().integer().default(20)
         };
 
-        User.on('preValidate', function (model) {
+        User.on('preValidate', (model) => {
 
             model.id = 'other_id';
         });
 
-        let user = new User({ name: 'test' });
-        user.validate().then(function (userModel) {
+        const user = new User({ name: 'test' });
+        user.validate().then((userModel) => {
 
             expect(userModel.id).to.equal('other_id');
             done();
         });
     });
 
-    it('can use preValidate twice', function (done) {
+    it('can use preValidate twice', (done) => {
 
         class User extends Wadofgum.mixin(Events, Validation) {};
         User.schema = {
@@ -265,18 +265,18 @@ lab.describe('when combined with events', function () {
             age: Joi.number().integer().default(20)
         };
 
-        User.on('preValidate', function (model) {
+        User.on('preValidate', (model) => {
 
             model.id = 'other_id';
         });
 
-        User.on('preValidate', function (model) {
+        User.on('preValidate', (model) => {
 
             model.age += 1;
         });
 
-        let user = new User({ name: 'test', age: 20 });
-        user.validate().then(function () {
+        const user = new User({ name: 'test', age: 20 });
+        user.validate().then(() => {
 
             expect(user.age).to.equal(21);
             expect(user.id).to.equal('other_id');
