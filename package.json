@@ -24,12 +24,12 @@
   "homepage": "https://github.com/nlf/wadofgum-validation#readme",
   "devDependencies": {
     "code": "^2.0.1",
+    "eslint-config-andyet": "^1.0.0",
     "lab": "^7.3.0",
-    "wadofgum": "^4.1.0",
-    "wadofgum-events": "^1.0.2"
+    "wadofgum": "^5.1.0"
   },
   "peerDependencies": {
-    "wadofgum": "^4.1.0"
+    "wadofgum": "^5.1.0"
   },
   "dependencies": {
     "joi": "^7.0.0"
